@@ -3,7 +3,6 @@ import reactLogo from './assets/react.svg';
 
 import './App.css';
 
-//--Messages interface
 interface IMessages {
   role: string;
   content: string;
@@ -15,12 +14,13 @@ const ChatComponent = () => {
   const [userKey, setUserKey] = useState('');
   const [keyInput, setKeyInput] = useState('');
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //TODO more custom prompts for other tasks
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
 
   const handleSendMessage = async () => {
-    // Make a request to the ChatGPT API with the user input
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -35,7 +35,7 @@ const ChatComponent = () => {
             content: [
               {
                 type: 'text',
-                text: 'You will be provided with statements, and your task is to convert them to standard English if they are incorrect, otherwise inform the user that the statement is already correct.',
+                text: 'You will be provided with text, and your task is to convert it to standard English if it is incorrect, otherwise inform the user that the statement is already correct.',
               },
             ],
           },
@@ -44,17 +44,13 @@ const ChatComponent = () => {
       }),
     });
 
-    const dataOut = await response.json(); // Extract the JSON data
+    const dataOut = await response.json();
     console.log(dataOut);
 
-    // Update the conversation history with the response from ChatGPT
     setMessages([
       ...messages,
       { role: 'assistant', content: dataOut.choices[0].message.content },
     ]);
-
-    // Clear the input field for prompts
-    setInput('');
   };
 
   const handleKey = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,22 +62,42 @@ const ChatComponent = () => {
     setKeyInput('');
   };
 
+  //TODO copy&paste function
+
   return (
     <>
       <p>Use chatGPT for text corrections! ✨</p>
-      <p>First, enter your key to start</p>
-      <input value={keyInput} type="text" onChange={handleKey} />
-      <button onClick={clearKey}>Let's start!</button>
-      <div>
+      <section className="key">
+        <p>
+          First, enter your{' '}
+          <a href="https://platform.openai.com/api-keys" target="_blank">
+            key
+          </a>{' '}
+          to start
+        </p>
+        <input value={keyInput} type="text" onChange={handleKey} />
+        <button onClick={clearKey}>Let's start!</button>
+      </section>
+      <div className="query-box text-box">
+        <textarea
+          className="query-text"
+          value={input}
+          onChange={handleInputChange}
+          rows={4}
+          placeholder="Insert your text here..."
+        />
+        <br />
+        <button className="button-send" onClick={handleSendMessage}>
+          Send
+        </button>
+      </div>
+      <div className="reply-box text-box">
         {messages.map((message, index) => (
-          <div key={index} className="">
+          <div className="reply-message" key={index}>
             {message.content}
           </div>
         ))}
-      </div>
-      <div>
-        <input type="text" value={input} onChange={handleInputChange} />
-        <button onClick={handleSendMessage}>Send</button>
+        <img src="/content_copy-icon-google.svg" alt="copy" />
       </div>
     </>
   );
@@ -91,9 +107,7 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <img src={reactLogo} className="logo react" alt="React logo" />
       </div>
       <div className="card">
         <ChatComponent />

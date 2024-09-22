@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -46,12 +47,76 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.text-box {
+  padding: 8px;
+  text-align: left;
+  border-radius: 16px;
+  min-height: 80px;
+  margin-top: 32px;
+  width: 90%;
+  min-width: 100px;
+}
+
+.query-box {
+  background-color: #2a7d8c;
+  display: flex;
+  flex-direction: column;
+}
+
+.button-send {
+  align-self: flex-end;
+  margin-right: 10px;
+}
+
+.query-text {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  resize: none;
+  font-size: 1em;
+  font-family: inherit;
+
+}
+
+.query-text::placeholder {
+  color: #ffffffa5;
+}
+
+.reply-box {
+  background-color: #36A0B3;
+}
+
+.reply-box::after {
+  content: "Replies to your queries";
+  color: #ffffffa5;
+  color: #ffffff71;
+}
+
+.reply-message {
+  border: 2px solid wheat;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@media (min-width: 600px) {
+  .text-box {
+    width: 100%;
+  }
+
+  .button-send {
+    margin-right: 0;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -59,9 +124,11 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
