@@ -61,7 +61,7 @@ button:focus-visible {
   padding: 8px;
   text-align: left;
   border-radius: 16px;
-  min-height: 80px;
+  min-height: 100px;
   margin-top: 32px;
   width: 90%;
   min-width: 100px;
@@ -97,9 +97,12 @@ button:focus-visible {
 }
 
 .reply-box::after {
-  content: "Replies to your queries";
-  color: #ffffffa5;
-  color: #ffffff71;
+  content: "Corrected text...";
+  color: #ffffff93;
+}
+
+.hide-placeholder::after {
+  content: "";
 }
 
 .reply-message {
@@ -107,6 +110,30 @@ button:focus-visible {
   margin: 10px;
   padding: 10px;
   border-radius: 8px;
+  position: relative;
+}
+
+.button-copy {
+  background: transparent;
+  padding: 4px;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.button-copy:active {
+  background: rgb(43, 72, 81);
+  border: 1px solid white;
+}
+
+.button-copy:hover {
+  border: 1px solid white;
+}
+
+.button-copy:focus {
+  outline: none;
+  border: none;
 }
 
 @media (min-width: 600px) {
@@ -116,6 +143,7 @@ button:focus-visible {
 
   .button-send {
     margin-right: 0;
+
   }
 }
 
@@ -131,5 +159,6 @@ button:focus-visible {
 
   button {
     background-color: #f9f9f9;
+
   }
 }

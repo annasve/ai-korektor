@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import reactLogo from './assets/react.svg';
 
 import './App.css';
@@ -35,7 +35,7 @@ const ChatComponent = () => {
             content: [
               {
                 type: 'text',
-                text: 'You will be provided with text, and your task is to convert it to standard English if it is incorrect, otherwise inform the user that the statement is already correct.',
+                text: 'You will be provided with text, and your task is to convert it to standard English without any comments if it is incorrect, otherwise inform the user that the statement is already correct.',
               },
             ],
           },
@@ -62,7 +62,13 @@ const ChatComponent = () => {
     setKeyInput('');
   };
 
-  //TODO copy&paste function
+  const replyTextRef = useRef<HTMLDivElement>(null);
+  const copyToClipboard = () => {
+    if (replyTextRef.current) {
+      const textToCopy = replyTextRef.current.innerText;
+      navigator.clipboard.writeText(textToCopy);
+    }
+  };
 
   return (
     <>
@@ -86,18 +92,19 @@ const ChatComponent = () => {
           rows={4}
           placeholder="Insert your text here..."
         />
-        <br />
         <button className="button-send" onClick={handleSendMessage}>
           Send
         </button>
       </div>
-      <div className="reply-box text-box">
+      <div className={`reply-box text-box ${input ? 'hide-placeholder' : ''}`}>
         {messages.map((message, index) => (
-          <div className="reply-message" key={index}>
+          <div ref={replyTextRef} className="reply-message" key={index}>
             {message.content}
+            <button className="button-copy" onClick={copyToClipboard}>
+              <img src="/content_copy-icon-google.svg" alt="copy" />
+            </button>
           </div>
         ))}
-        <img src="/content_copy-icon-google.svg" alt="copy" />
       </div>
     </>
   );
