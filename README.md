@@ -1,50 +1,16 @@
-# React + TypeScript + Vite
+# AI korektor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A chatGPT-powered web tool for text corrections and proofreading.
 
-Currently, two official plugins are available:
+## Getting Started
+The project can run __locally__.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A personal [chatGPT API key](https://platform.openai.com/api-keys) is necessary to run the project.
 
-## Expanding the ESLint configuration
+## Usage examples
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![Intro-screen](https://github.com/user-attachments/assets/0e746e30-ca42-4898-bcf0-4a1bdfbb057d)
+![First-query](https://github.com/user-attachments/assets/5e697ff5-defb-40ba-a258-8ba831d9b61a)
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+![Multiple-answers-and-correct-copied](https://github.com/user-attachments/assets/8b2f5d21-db0a-4b3a-b855-36e4742aa73d)
+![Multiple-answers-and-gibberish-input](https://github.com/user-attachments/assets/29a2f3bc-8961-4f48-95e6-0adf4ef94e59)
