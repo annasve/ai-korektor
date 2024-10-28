@@ -1,126 +1,79 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 
 import './App.css';
 
-interface IMessages {
-  role: string;
-  content: string;
-}
+import { KeyInput } from './components/KeyInput/KeyInput';
+import { ChatComponent } from './components/ChatComponent/ChatComponent';
 
-const ChatComponent = () => {
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<IMessages[]>([]);
+import { IMessage } from './types/types';
+
+export const App: React.FC = () => {
   const [userKey, setUserKey] = useState('');
-  const [keyInput, setKeyInput] = useState('');
+  const [input, setInput] = useState('');
+  const [sentMessage, setSentMessage] = useState('');
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
-  //TODO more custom prompts for other tasks
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleSendMessage = async () => {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: [
-              {
-                type: 'text',
-                text: 'You will be provided with text, and your task is to convert it to standard English without any comments if it is incorrect, otherwise inform the user that the statement is already correct.',
-              },
-            ],
+  //API call handler
+  useEffect(() => {
+    const sendMessage = async () => {
+      const response = await fetch(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userKey}`,
           },
-          { role: 'user', content: input },
-        ],
-      }),
-    });
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo',
+            messages: [
+              {
+                role: 'system',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'You will be provided with text, and your task is to convert it to standard English without any comments if it is incorrect, otherwise inform the user that the statement is already correct.',
+                  },
+                ],
+              },
+              { role: 'user', content: sentMessage },
+            ],
+          }),
+        },
+      );
 
-    const dataOut = await response.json();
-    console.log(dataOut);
+      const dataOut = await response.json();
 
-    setMessages([
-      ...messages,
-      { role: 'assistant', content: dataOut.choices[0].message.content },
-    ]);
-  };
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: 'assistant', content: dataOut.choices[0].message.content },
+      ]);
+    };
 
-  const handleKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserKey(e.target.value);
-    setKeyInput(e.target.value);
-  };
-
-  const clearKey = () => {
-    setKeyInput('');
-  };
-
-  const replyTextRef = useRef<HTMLDivElement>(null);
-  const copyToClipboard = () => {
-    if (replyTextRef.current) {
-      const textToCopy = replyTextRef.current.innerText;
-      navigator.clipboard.writeText(textToCopy);
+    if (sentMessage) {
+      // Only call if sentMessage is not empty
+      sendMessage();
     }
-  };
+  }, [sentMessage, userKey]);
 
-  return (
-    <>
-      <p>Use chatGPT for text corrections! ✨</p>
-      <section className="key">
-        <p>
-          First, enter your{' '}
-          <a href="https://platform.openai.com/api-keys" target="_blank">
-            key
-          </a>{' '}
-          to start
-        </p>
-        <input value={keyInput} type="text" onChange={handleKey} />
-        <button onClick={clearKey}>Let's start!</button>
-      </section>
-      <div className="query-box text-box">
-        <textarea
-          className="query-text"
-          value={input}
-          onChange={handleInputChange}
-          rows={4}
-          placeholder="Insert your text here..."
-        />
-        <button className="button-send" onClick={handleSendMessage}>
-          Send
-        </button>
-      </div>
-      <div className={`reply-box text-box ${input ? 'hide-placeholder' : ''}`}>
-        {messages.map((message, index) => (
-          <div ref={replyTextRef} className="reply-message" key={index}>
-            {message.content}
-            <button className="button-copy" onClick={copyToClipboard}>
-              <img src="/content_copy-icon-google.svg" alt="copy" />
-            </button>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-};
-
-function App() {
   return (
     <>
       <div>
         <img src={reactLogo} className="logo react" alt="React logo" />
       </div>
       <div className="card">
-        <ChatComponent />
+        <h2>Use chatGPT for text corrections! ✨</h2>
+        <KeyInput keyValue={userKey} onInput={setUserKey} />
+        <ChatComponent
+          messages={messages}
+          input={input}
+          onInput={setInput}
+          onSend={() => setSentMessage(input)}
+        />
       </div>
     </>
   );
-}
+};
 
 export default App;
