@@ -7,12 +7,20 @@ import { KeyInput } from './components/KeyInput/KeyInput';
 import { ChatComponent } from './components/ChatComponent/ChatComponent';
 
 import { IMessage } from './types/types';
+import { TaskDropdown } from './components/TaskDropdown/TaskDropdown';
 
 export const App: React.FC = () => {
   const [userKey, setUserKey] = useState('');
   const [input, setInput] = useState('');
+  const [taskInstruction, setTaskInstruction] = useState('');
   const [sentMessage, setSentMessage] = useState('');
   const [messages, setMessages] = useState<IMessage[]>([]);
+
+  //Dropdown actions
+  const handleTaskSelect = (instruction: string) => {
+    setTaskInstruction(instruction);
+    setSentMessage(''); // Clears out the previous message
+  };
 
   //API call handler
   useEffect(() => {
@@ -30,12 +38,7 @@ export const App: React.FC = () => {
             messages: [
               {
                 role: 'system',
-                content: [
-                  {
-                    type: 'text',
-                    text: 'You will be provided with text, and your task is to convert it to standard English without any comments if it is incorrect, otherwise inform the user that the statement is already correct.',
-                  },
-                ],
+                content: taskInstruction,
               },
               { role: 'user', content: sentMessage },
             ],
@@ -55,7 +58,7 @@ export const App: React.FC = () => {
       // Only call if sentMessage is not empty
       sendMessage();
     }
-  }, [sentMessage, userKey]);
+  }, [sentMessage, userKey, taskInstruction]);
 
   return (
     <>
@@ -65,6 +68,7 @@ export const App: React.FC = () => {
       <div className="card">
         <h2>Use chatGPT for text corrections! ✨</h2>
         <KeyInput keyValue={userKey} onInput={setUserKey} />
+        <TaskDropdown onSelect={handleTaskSelect} />
         <ChatComponent
           messages={messages}
           input={input}
